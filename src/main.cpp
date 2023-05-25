@@ -40,12 +40,13 @@ bool sendUdpMessage(const std::string& ipAddress, int port, const std::string& m
 }
 
 int main() {
-	std::string ipAddress = "10.8.6.126";  // IP address of the destination
+	std::string ipAddress = "192.168.3.255";  // IP address of the destination
 	int port = 42069;                     // Port number of the destination
-	std::string message = "Hello, UDP!";  // Message to send
+	std::string message = "Broadcast!";  // Message to send
 
 	// Call the function to send the UDP message
-	sendUdpMessage(ipAddress, port, message);
+	for(int i = 0; i < 100; i++)
+		sendUdpMessage(ipAddress, port, message);
 
 	return 0;
 }
