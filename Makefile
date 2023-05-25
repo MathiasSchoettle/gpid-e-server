@@ -1,30 +1,26 @@
-CXX = g++
-CXXFLAGS = -std=c++17 -Wall
+CC = g++
+CFLAGS = -Wall -Wextra -pedantic -std=c++11
+LDFLAGS = -lnsl -lstdc++
 
-# Directories
 SRCDIR = src
-BUILDDIR = build
-TARGET = gpid-server
+OBJDIR = obj
+BINDIR = bin
 
-# Find all source files
-SRCS := $(shell find $(SRCDIR) -name '*.cpp')
-OBJS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SRCS:.cpp=.o))
-DEPS := $(OBJS:.o=.d)
+SOURCES := $(wildcard $(SRCDIR)/*.cpp)
+OBJECTS := $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(SOURCES))
+EXECUTABLE = gpid
 
-# Main target
-$(TARGET): $(OBJS)
-	$(CXX) $(CXXFLAGS) $^ -o $@
+.PHONY: all clean
 
-# Include dependencies
--include $(DEPS)
+all: $(EXECUTABLE)
 
-# Compile .cpp to .o and generate dependency files
-$(BUILDDIR)/%.o: $(SRCDIR)/%.cpp
-	@mkdir -p $(@D)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-	$(CXX) -MM $(CXXFLAGS) $< > $(BUILDDIR)/$*.d
+$(EXECUTABLE): $(OBJECTS)
+	@mkdir -p $(BINDIR)
+	$(CC) $(OBJECTS) -o $@ $(LDFLAGS)
 
-.PHONY: clean
+$(OBJDIR)/%.o: $(SRCDIR)/%.cpp
+	@mkdir -p $(OBJDIR)
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	@rm -rf $(BUILDDIR) $(TARGET)
+	rm -rf $(OBJDIR) $(BINDIR)
