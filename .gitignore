@@ -1,0 +1,13 @@
+*.o
+*.so
+*.a
+executable
+build/
+.vscode/
+.idea/
+dependencies/
+*.log
+*.swp
+*.swo
+*~
+gpid-server
