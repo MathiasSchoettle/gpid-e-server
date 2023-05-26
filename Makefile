@@ -4,7 +4,6 @@ LDFLAGS = -lnsl -lstdc++
 
 SRCDIR = src
 OBJDIR = obj
-BINDIR = bin
 
 SOURCES := $(wildcard $(SRCDIR)/*.cpp)
 OBJECTS := $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(SOURCES))
@@ -15,7 +14,6 @@ EXECUTABLE = gpid
 all: $(EXECUTABLE)
 
 $(EXECUTABLE): $(OBJECTS)
-	@mkdir -p $(BINDIR)
 	$(CC) $(OBJECTS) -o $@ $(LDFLAGS)
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
@@ -23,4 +21,4 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -rf $(OBJDIR) $(BINDIR)
+	rm -rf $(OBJDIR)
