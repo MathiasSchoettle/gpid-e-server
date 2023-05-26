@@ -5,9 +5,10 @@
 #include <unistd.h>
 #include "networkHandler.h"
 
-bool sendUdpMessage(const std::string& ipAddress, int port, const std::string& message) {
+bool scan(const std::string& ipAddress, int port, const std::string& message) {
 	// Create a UDP socket
 	int sockfd = socket(AF_INET, SOCK_DGRAM, 0);
+    int broadcast = 1;
 	if (sockfd < 0) {
 		std::cerr << "Failed to create socket." << std::endl;
 		return false;
@@ -17,6 +18,10 @@ bool sendUdpMessage(const std::string& ipAddress, int port, const std::string& m
 	sockaddr_in destAddr{};
 	destAddr.sin_family = AF_INET;
 	destAddr.sin_port = htons(port);
+    if (setsockopt(sockfd, SOL_SOCKET, SO_BROADCAST,
+                   &broadcast, sizeof broadcast) < 0)
+        printf("setsockopt");
+
 	if (inet_pton(AF_INET, ipAddress.c_str(), &(destAddr.sin_addr)) <= 0) {
 		std::cerr << "Invalid IP address." << std::endl;
 		close(sockfd);
@@ -105,6 +110,8 @@ int awaitResponse(){
         // // Retrieve message
         std::string message(buffer, bytesRead);
         std::cout << "Message: " << message << std::endl;
+
+        
     }
 
     // Close the socket
@@ -116,9 +123,12 @@ int awaitResponse(){
 
 void network_handler(){
 
+    scan("192.168.3.255",GPID_E_PORT, "Show me who you are!");
+
 
     if(fuck){
-        awaitResponse();
+        scan("192.168.3.255",GPID_E_PORT, "Show me who you are!");
+    
     }
     std::cout << "hello world" << std::endl;
 }

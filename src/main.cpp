@@ -16,7 +16,7 @@ int main() {
 	//awaitResponse();
   //mqtt_start_scan();
   std::thread t_network_listener(network_handler);
-  
+  std::thread t_wait_for_new_clients(awaitResponse);
   std::thread t_scan_waiter(mqtt_start_scan);
   
   std::cout << "Der Bré wartet" << std::endl;
