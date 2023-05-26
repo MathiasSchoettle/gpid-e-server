@@ -24,7 +24,7 @@ class db {
 public:
 	db();
 	~db();
-	bool save_device(std::string &ip_address, std::string &sys_description);
+	bool save_device(const std::string &ip_address, const std::string &sys_description);
 	std::vector<device> devices();
 	bool save_entry(const std::string &ip_address, float consumption);
 };

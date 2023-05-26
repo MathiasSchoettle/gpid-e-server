@@ -20,7 +20,7 @@ db::~db() {
 	PQfinish(connection);
 }
 
-bool db::save_device(std::string &ip_address, std::string &sys_description) {
+bool db::save_device(const std::string &ip_address, const std::string &sys_description) {
 	const char* insert_query = "INSERT INTO device (deviceip, sys_descr) VALUES ($1, $2)";
 	PGresult* prepared_query = PQprepare(connection, "", insert_query, 2, NULL);
 
