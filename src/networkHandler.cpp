@@ -110,7 +110,7 @@ int wait_for_clients_broadcast()
         //  save new device
         std::string sysDesc = split(message, ':')[1];
         std::cout << "Found new device with IP: " << sourceIP << " and a SysDesc of: " << sysDesc;
-        database->save_device(sourceIP, sysDesc);   
+        database->save_device(sourceIP, sysDesc);
     }
 
     // Close the socket
@@ -121,16 +121,14 @@ int wait_for_clients_broadcast()
 
 void network_handler()
 {
-    for (int i = 0; i < 5; i++)
-    {
-        // scan("192.168.3.255", "Show me who you are!");
-        send_tcp_data("192.168.3.1");
-        sleep(10);
-    }
-    // send_tcp_data("192.168.3.1");
-    if (fuck)
-    {
-        scan("192.168.3.255", "Show me who you are!");
+    scan("192.168.3.255", "Show me who you are!");
+    while(1) {
+        if (fuck) scan("192.168.3.255", "Show me who you are!");
+
+        for (auto device : database->devices())
+            send_tcp_data(device.ip_address);
+
+        std::this_thread::sleep_for(std::chrono::seconds(10));
     }
 }
 
@@ -220,7 +218,7 @@ bool client_tcp_handler()
     }
 
     // Handle the client
-    handle_client_creation(client_socket);
+    handle_client_creation(client_socket, inet_ntoa(clientAddress.sin_addr));
 
     // Close the client socket
     close(client_socket);
@@ -251,16 +249,13 @@ std::string read_data(int client_socket)
     return read_data;
 }
 
-int handle_client_creation(int client_socket)
+int handle_client_creation(int client_socket, std::string ip_address)
 {
     const int buffer_size = 1024;
     char buffer[buffer_size];
 
     std::string received_data = read_data(client_socket);
-
-
-
-    // TODO Save Client
+    database->save_device(ip_address, split(received_data, ':')[1]);
 }
 
 int connect_to_server(const std::string &server_ip)
@@ -340,7 +335,8 @@ int send_tcp_data(const std::string &server_ip)
 
     auto split_vals = split(received_data, ',');
 
-    for (auto val : split_vals) {
+    for (auto val : split_vals)
+    {
         auto data_pair = split(val, ';');
         database->save_entry(server_ip, std::stoi(data_pair[0]), std::stof(data_pair[1]));
     }
