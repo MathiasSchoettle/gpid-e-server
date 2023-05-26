@@ -42,11 +42,18 @@ bool sendUdpMessage(const std::string& ipAddress, int port, const std::string& m
 
 
 int awaitResponse(){
-
-      // Create a socket
+ // Create a socket
     int serverSocket = socket(AF_INET, SOCK_DGRAM, 0);
     if (serverSocket < 0) {
         std::cerr << "Failed to create socket." << std::endl;
+        return 1;
+    }
+
+    // Enable broadcast
+    int broadcastEnable = 1;
+    if (setsockopt(serverSocket, SOL_SOCKET, SO_BROADCAST, &broadcastEnable, sizeof(broadcastEnable)) < 0) {
+        std::cerr << "Failed to enable broadcast." << std::endl;
+        close(serverSocket);
         return 1;
     }
 
@@ -63,7 +70,7 @@ int awaitResponse(){
         return 1;
     }
 
-    std::cout << "Server is listening on port " << port << std::endl;
+    std::cout << "Server is listening for UDP broadcast on port " << port << std::endl;
 
     // Receive incoming packets
     char buffer[BUFFER_SIZE];
