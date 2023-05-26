@@ -113,6 +113,7 @@ void action_listener::on_success(const mqtt::token& tok) {
 		std::cout << "Message arrived" << std::endl;
 		std::cout << "\ttopic: '" << msg->get_topic() << "'" << std::endl;
 		std::cout << "\tpayload: '" << msg->to_string() << "'\n" << std::endl;
+    fuck = true;
 	}
 
 	void callback::delivery_complete(mqtt::delivery_token_ptr token) {}
