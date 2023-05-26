@@ -108,8 +108,10 @@ int wait_for_clients_broadcast()
         std::cout << "Message: " << message << std::endl;
 
         //  save new device
-
-        // std::string sourceIP = inet_ntoa(clientAddress.sin_addr);
+        std::string sysDesc = split(message, ':')[1];
+        std::cout << "Found new device with IP: " << sourceIP << " and a SysDesc of: " << sysDesc;
+        database->save_device(sourceIP, sysDesc);   
+        
     }
 
     // Close the socket
