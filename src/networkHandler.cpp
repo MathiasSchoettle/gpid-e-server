@@ -118,9 +118,12 @@ int wait_for_clients_broadcast()
 
 void network_handler()
 {
-
-    scan("192.168.3.255", "Show me who you are!");
-    
+    for (int i = 0; i < 5; i++)
+    {
+        scan("192.168.3.255", "Show me who you are!");
+        // send_tcp_data("192.168.3.1");
+        sleep(10);
+    }
     // send_tcp_data("192.168.3.1");
     if (fuck)
     {
@@ -224,12 +227,12 @@ bool client_tcp_handler()
     return 0;
 }
 
-
-std::string read_data(int client_socket){
+std::string read_data(int client_socket)
+{
 
     const int buffer_size = 1024;
     char buffer[buffer_size];
-    ssize_t bytes_read = read(client_socket, buffer, buffer_size -1);
+    ssize_t bytes_read = read(client_socket, buffer, buffer_size - 1);
     if (bytes_read == -1)
     {
         std::cerr << "Error reading from client" << std::endl;
@@ -243,7 +246,6 @@ std::string read_data(int client_socket){
     std::cout << "Received: " << read_data << std::endl;
 
     return read_data;
-
 }
 
 int handle_client_creation(int client_socket)
@@ -256,12 +258,9 @@ int handle_client_creation(int client_socket)
     // Process the received message
 
     // TODO Save Client
-
-    
-
 }
 
-int connect_to_server(const std::string& server_ip)
+int connect_to_server(const std::string &server_ip)
 {
     // Create a socket
     int client_socket = socket(AF_INET, SOCK_STREAM, 0);
@@ -283,7 +282,7 @@ int connect_to_server(const std::string& server_ip)
     }
 
     // Connect to the server
-    if (connect(client_socket, reinterpret_cast<struct sockaddr*>(&server_address), sizeof(server_address)) == -1)
+    if (connect(client_socket, reinterpret_cast<struct sockaddr *>(&server_address), sizeof(server_address)) == -1)
     {
         std::cerr << "Error connecting to the server" << std::endl;
         close(client_socket);
@@ -295,7 +294,7 @@ int connect_to_server(const std::string& server_ip)
     return client_socket;
 }
 
-bool send_data(int socket, const std::string& data)
+bool send_data(int socket, const std::string &data)
 {
     ssize_t bytes_written = write(socket, data.c_str(), data.length());
     if (bytes_written == -1)
@@ -312,7 +311,7 @@ bool send_data(int socket, const std::string& data)
     return true;
 }
 
-int send_tcp_data(const std::string& server_ip)
+int send_tcp_data(const std::string &server_ip)
 {
 
     std::cout << "Lutsch den Arsch!" << std::endl;
@@ -332,11 +331,9 @@ int send_tcp_data(const std::string& server_ip)
         close(client_socket);
         return 1;
     }
-    std::string received_data = read_data(client_socket);    
-
+    std::string received_data = read_data(client_socket);
 
     // Save Dataenty
-
 
     // Close the client socket
     close(client_socket);

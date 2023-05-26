@@ -1,6 +1,7 @@
 #pragma once
 #include "mqtt_client.h"
 #include <iostream>
+#include "db.h"
 #define GPID_E_PORT 42069
 #define BUFFER_SIZE 1024
 
