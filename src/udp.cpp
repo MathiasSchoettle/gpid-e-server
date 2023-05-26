@@ -1,8 +1,8 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <netinet/ether.h>
 #include <arpa/inet.h>
 #include <unistd.h>
-
 #include "udp.h"
 
 bool sendUdpMessage(const std::string& ipAddress, int port, const std::string& message) {
@@ -86,8 +86,10 @@ int awaitResponse(){
             return 1;
         }
 
-        // Retrieve MAC address
-        unsigned char *macAddress = reinterpret_cast<unsigned char *>(clientAddress.sin_addr.s_addr);
+        // // // Retrieve MAC address
+       
+        unsigned char *macAddress = (unsigned char *)(clientAddress.sin_addr.s_addr);
+        std::cout <<"Size of macAddress" << sizeof(macAddress) << std::endl;
         std::cout << "MAC Address: ";
         for (int i = 0; i < 6; ++i) {
             std::cout << std::hex << static_cast<int>(macAddress[i]);
@@ -100,7 +102,7 @@ int awaitResponse(){
         std::string sourceIP = inet_ntoa(clientAddress.sin_addr);
         std::cout << "Source IP Address: " << sourceIP << std::endl;
 
-        // Retrieve message
+        // // Retrieve message
         std::string message(buffer, bytesRead);
         std::cout << "Message: " << message << std::endl;
     }
