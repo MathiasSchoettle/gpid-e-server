@@ -1,10 +1,14 @@
 #include "networkHandler.h"
 #include "mqtt_client.h"
+#include "db.h"
 #include <iostream>
 #include <ostream>
 #include <thread>
 
 int main() {
+
+	database = new db();
+
 	std::string ipAddress = "192.168.3.255";  // IP address of the destination
 	int port = GPID_E_PORT;                  // Port number of the destination
 	std::string message = "Broadcast!";  // Message to send
@@ -25,6 +29,8 @@ int main() {
   t_network_listener.join();
 //   t_wait_for_new_clients.join();
   t_client_tcp_handler.join();
+
+	delete database;
 
 	return 0;
 }

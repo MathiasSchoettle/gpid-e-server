@@ -5,6 +5,8 @@
 
 #include "db.h"
 
+db *database;
+
 db::db() {
 	connection = PQconnectdb("dbname=postgres host=localhost user=postgres password=gpid");
 

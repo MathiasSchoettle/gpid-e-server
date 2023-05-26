@@ -28,3 +28,5 @@ public:
 	std::vector<device> devices();
 	bool save_entry(const std::string &ip_address, float consumption);
 };
+
+extern db *database;
