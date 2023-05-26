@@ -2,6 +2,7 @@
 #include "mqtt_client.h"
 #include <iostream>
 #include "db.h"
+#include <vector>
 #define GPID_E_PORT 42069
 #define BUFFER_SIZE 1024
 

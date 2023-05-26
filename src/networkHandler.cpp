@@ -108,6 +108,8 @@ int wait_for_clients_broadcast()
         std::cout << "Message: " << message << std::endl;
 
         //  save new device
+
+        // std::string sourceIP = inet_ntoa(clientAddress.sin_addr);
     }
 
     // Close the socket
@@ -339,4 +341,24 @@ int send_tcp_data(const std::string &server_ip)
     close(client_socket);
 
     return 0;
+}
+
+std::vector<std::string> split(const std::string &s, char seperator)
+{
+    std::vector<std::string> output;
+
+    std::string::size_type prev_pos = 0, pos = 0;
+
+    while ((pos = s.find(seperator, pos)) != std::string::npos)
+    {
+        std::string substring(s.substr(prev_pos, pos - prev_pos));
+
+        output.push_back(substring);
+
+        prev_pos = ++pos;
+    }
+
+    output.push_back(s.substr(prev_pos, pos - prev_pos)); // Last word
+
+    return output;
 }
