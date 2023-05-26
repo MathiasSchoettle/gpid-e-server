@@ -112,3 +112,13 @@ int awaitResponse(){
 
     return 0;
 }
+
+
+void network_handler(){
+
+
+    if(fuck){
+        awaitResponse();
+    }
+    std::cout << "hello world" << std::endl;
+}
