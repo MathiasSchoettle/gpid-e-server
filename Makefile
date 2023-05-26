@@ -1,6 +1,6 @@
 CC = g++
 CFLAGS = -Wall -Wextra -pedantic -std=c++11
-LDFLAGS = -lnsl -lstdc++
+LDFLAGS = -lnsl -lstdc++ -lpaho-mqttpp3 -lpaho-mqtt3c
 
 SRCDIR = src
 OBJDIR = obj
