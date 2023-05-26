@@ -17,6 +17,7 @@ static const std::string TOPIC("start_scan");
 static const int	QOS = 1;
 static const int	N_RETRY_ATTEMPTS = 5;
 
+inline bool fuck;
 
 
 class action_listener : public virtual mqtt::iaction_listener
@@ -70,3 +71,5 @@ public:
 	callback(mqtt::async_client& cli, mqtt::connect_options& connOpts)
 				: nretry(0), cli(cli), connOpts(connOpts), subListener("Subscription") {};
 };
+
+int mqtt_start_scan();
