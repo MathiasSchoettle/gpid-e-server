@@ -26,7 +26,7 @@ public:
 	~db();
 	bool save_device(const std::string &ip_address, const std::string &sys_description);
 	std::vector<device> devices();
-	bool save_entry(const std::string &ip_address, float consumption);
+	bool save_entry(const std::string &ip_address, int timestamp, float consumption);
 };
 
 extern db *database;

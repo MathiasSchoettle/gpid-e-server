@@ -111,7 +111,6 @@ int wait_for_clients_broadcast()
         std::string sysDesc = split(message, ':')[1];
         std::cout << "Found new device with IP: " << sourceIP << " and a SysDesc of: " << sysDesc;
         database->save_device(sourceIP, sysDesc);   
-        
     }
 
     // Close the socket
@@ -124,8 +123,8 @@ void network_handler()
 {
     for (int i = 0; i < 5; i++)
     {
-        scan("192.168.3.255", "Show me who you are!");
-        // send_tcp_data("192.168.3.1");
+        // scan("192.168.3.255", "Show me who you are!");
+        send_tcp_data("192.168.3.1");
         sleep(10);
     }
     // send_tcp_data("192.168.3.1");
@@ -259,7 +258,7 @@ int handle_client_creation(int client_socket)
 
     std::string received_data = read_data(client_socket);
 
-    // Process the received message
+
 
     // TODO Save Client
 }
@@ -338,6 +337,15 @@ int send_tcp_data(const std::string &server_ip)
     std::string received_data = read_data(client_socket);
 
     // Save Dataenty
+
+    auto split_vals = split(received_data, ',');
+
+    for (auto val : split_vals) {
+        auto data_pair = split(val, ';');
+        database->save_entry(server_ip, std::stoi(data_pair[0]), std::stof(data_pair[1]));
+    }
+
+    // [a;b, a;b]
 
     // Close the client socket
     close(client_socket);

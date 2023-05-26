@@ -69,7 +69,7 @@ std::vector<device> db::devices() {
 	return devices;
 }
 
-bool db::save_entry(const std::string &ip_address, float consumption) {
+bool db::save_entry(const std::string &ip_address, int timestamp, float consumption) {
 	const char* select_query = "SELECT id FROM device WHERE deviceip = $1";
 	const char* param_values[1];
 	param_values[0] = ip_address.c_str();
@@ -93,7 +93,7 @@ bool db::save_entry(const std::string &ip_address, float consumption) {
 	int device_id = atoi(PQgetvalue(select_result, 0, 0));
 	PQclear(select_result);
 
-	auto query = std::string("INSERT INTO data_entry (timestamp, device_id, consumption) VALUES (CURRENT_TIMESTAMP, ") + std::to_string(device_id) + std::string(",") + std::to_string(consumption) + std::string(")");
+	auto query = std::string("INSERT INTO data_entry (timestamp, device_id, consumption) VALUES (") + std::to_string(timestamp) + std::string(", ") + std::to_string(device_id) + std::string(",") + std::to_string(consumption) + std::string(")");
 
 	PGresult* insert_result = PQexecParams(connection, query.c_str(), 0, NULL, NULL, NULL, NULL, 0);
 
