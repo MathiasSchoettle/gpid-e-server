@@ -3,7 +3,7 @@
 #include <netinet/ether.h>
 #include <arpa/inet.h>
 #include <unistd.h>
-#include "udp.h"
+#include "networkHandler.h"
 
 bool sendUdpMessage(const std::string& ipAddress, int port, const std::string& message) {
 	// Create a UDP socket
