@@ -5,6 +5,7 @@
 #define BUFFER_SIZE 1024
 
 bool scan(const std::string& ipAddress, int port, const std::string& message);
-int awaitResponse();
+int wait_for_clients();
 
 void network_handler();
+client_connection_handler();

@@ -46,7 +46,7 @@ bool scan(const std::string& ipAddress, int port, const std::string& message) {
 
 
 
-int awaitResponse(){
+int wait_for_clients(){
  // Create a socket
     int serverSocket = socket(AF_INET, SOCK_DGRAM, 0);
     if (serverSocket < 0) {
@@ -91,18 +91,7 @@ int awaitResponse(){
             return 1;
         }
 
-        // // // Retrieve MAC address
-       
-        unsigned char *macAddress = (unsigned char *)(clientAddress.sin_addr.s_addr);
-        std::cout <<"Size of macAddress" << sizeof(macAddress) << std::endl;
-        std::cout << "MAC Address: ";
-        for (int i = 0; i < 6; ++i) {
-            std::cout << std::hex << static_cast<int>(macAddress[i]);
-            if (i < 5)
-                std::cout << ":";
-        }
-        std::cout << std::endl;
-
+        
         // Retrieve source IP address
         std::string sourceIP = inet_ntoa(clientAddress.sin_addr);
         std::cout << "Source IP Address: " << sourceIP << std::endl;
@@ -110,8 +99,9 @@ int awaitResponse(){
         // // Retrieve message
         std::string message(buffer, bytesRead);
         std::cout << "Message: " << message << std::endl;
-
         
+        //  save new device 
+
     }
 
     // Close the socket
@@ -131,4 +121,64 @@ void network_handler(){
     
     }
     std::cout << "hello world" << std::endl;
+}
+
+int client_connection_handler(){
+
+// Create a socket
+    int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
+    if (serverSocket < 0) {
+        std::cerr << "Failed to create socket." << std::endl;
+        return 1;
+    }
+
+
+
+    // Bind the socket to a specific port
+    int port = GPID_E_PORT;  // Change this to the desired port number
+    sockaddr_in serverAddress{};
+    serverAddress.sin_family = AF_INET;
+    serverAddress.sin_addr.s_addr = INADDR_ANY;
+    serverAddress.sin_port = htons(port);
+
+    if (bind(serverSocket, (struct sockaddr *)&serverAddress, sizeof(serverAddress)) < 0) {
+        std::cerr << "Failed to bind socket to port " << port << std::endl;
+        close(serverSocket);
+        return 1;
+    }
+
+    std::cout << "Server is listening for UDP broadcast on port " << port << std::endl;
+
+    // Receive incoming packets
+    char buffer[BUFFER_SIZE];
+    sockaddr_in clientAddress{};
+    socklen_t clientAddressLength = sizeof(clientAddress);
+
+    while (true) {
+        // Receive packet
+        int bytesRead = recvfrom(serverSocket, buffer, BUFFER_SIZE, 0, (struct sockaddr *)&clientAddress, &clientAddressLength);
+        if (bytesRead < 0) {
+            std::cerr << "Failed to receive packet" << std::endl;
+            close(serverSocket);
+            return 1;
+        }
+
+        
+        // Retrieve source IP address
+        std::string sourceIP = inet_ntoa(clientAddress.sin_addr);
+        std::cout << "Source IP Address: " << sourceIP << std::endl;
+
+        // // Retrieve message
+        std::string message(buffer, bytesRead);
+        std::cout << "Message: " << message << std::endl;
+        
+        //  save new device 
+
+    }
+
+    // Close the socket
+    close(serverSocket);
+
+    return 0;
+
 }
