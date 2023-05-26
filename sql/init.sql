@@ -1,6 +1,6 @@
 CREATE TABLE device (
     id SERIAL PRIMARY KEY,
-    deviceip VARCHAR(255),
+    deviceip VARCHAR(255) UNIQUE,
     sys_descr VARCHAR(255)
 );
 
