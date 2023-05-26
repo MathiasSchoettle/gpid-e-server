@@ -43,6 +43,9 @@ bool db::save_device(const std::string &ip_address, const std::string &sys_descr
 
 	PQclear(prepared_query);
 	PQclear(result);
+
+	std::cout << "created data entry: (" << ip_address << " : " << sys_description << ")" << std::endl; 
+
 	return true;
 }
 
@@ -102,6 +105,8 @@ bool db::save_entry(const std::string &ip_address, int timestamp, float consumpt
 		PQclear(insert_result);
 		return false;
 	}
+
+	std::cout << "created data entry: (" << consumption << ")" << std::endl; 
 
 	PQclear(insert_result);
 }
