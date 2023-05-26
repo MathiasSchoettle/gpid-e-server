@@ -8,6 +8,8 @@ struct device {
 	int id;
 	std::string ip_address;
 	std::string sys_description;
+	device(int id, std::string ip_address, std::string sys_description) 
+	: id(id), ip_address(ip_address), sys_description(sys_description) {}
 };
 
 struct data_entry {
@@ -18,9 +20,11 @@ struct data_entry {
 };
 
 class db {
+	PGconn *connection;
+public:
 	db();
-	PGconn * connection;
-	void save_device(std::string ip_address, std::string sys_description);
+	~db();
+	bool save_device(std::string &ip_address, std::string &sys_description);
 	std::vector<device> devices();
-	void save_entry(std::string ip_address, float consumption);
+	bool save_entry(const std::string &ip_address, float consumption);
 };
