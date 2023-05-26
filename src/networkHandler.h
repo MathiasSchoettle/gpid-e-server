@@ -4,8 +4,11 @@
 #define GPID_E_PORT 42069
 #define BUFFER_SIZE 1024
 
-bool scan(const std::string& ipAddress, int port, const std::string& message);
-int wait_for_clients();
-
+bool scan(const std::string& ipAddress, const std::string& message);
+bool client_tcp_handler();
+int retrieve_information(const std::string& ipAddress, const std::string& message);
+int wait_for_clients_broadcast();
+int send_tcp_data(const std::string &server_ip);
 void network_handler();
-client_connection_handler();
+bool send_data(int socket, const std::string& data);
+int handle_client_creation(int client_socket);
