@@ -45,11 +45,16 @@ bool scan(const std::string &ipAddress, const std::string &message)
 
 	// Close the socket
 	close(sockfd);
+	fcuk = true;
 	return true;
 }
 
 int wait_for_clients_broadcast()
 {
+	while (!fcuk)
+	{
+	}
+
 	// Create a socket
 	int serverSocket = socket(AF_INET, SOCK_DGRAM, 0);
 	if (serverSocket < 0)
@@ -88,7 +93,8 @@ int wait_for_clients_broadcast()
 	sockaddr_in clientAddress{};
 	socklen_t clientAddressLength = sizeof(clientAddress);
 
-	while (true)
+	// lul
+	while (true && !fuck)
 	{
 		// Receive packet
 		int bytesRead = recvfrom(serverSocket, buffer, BUFFER_SIZE, 0, (struct sockaddr *)&clientAddress, &clientAddressLength);
@@ -115,6 +121,8 @@ int wait_for_clients_broadcast()
 
 	// Close the socket
 	close(serverSocket);
+
+	fcuk = false;
 
 	return 0;
 }
@@ -175,6 +183,8 @@ int retrieve_information(const std::string &ipAddress, const std::string &messag
 
 bool client_tcp_handler()
 {
+	std::cout << "fuck me in the ass cause i love jesus, the good lord would want it that way" << std::endl;
+
 	// Create a socket
 	int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
 	if (serverSocket < 0)
@@ -224,6 +234,8 @@ bool client_tcp_handler()
 	close(client_socket);
 	// Close the socket
 	close(serverSocket);
+
+	std::cout << " i wANT TO BREAK FREE tcp handler socket should be closed" << std::endl;
 
 	return 0;
 }
