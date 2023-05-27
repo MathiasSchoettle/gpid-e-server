@@ -20,7 +20,6 @@ struct data_entry {
 };
 
 class db {
-	PGconn *connection;
 public:
 	db();
 	~db();

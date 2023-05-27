@@ -8,24 +8,20 @@
 db *database;
 
 db::db() {
-	connection = PQconnectdb("dbname=postgres host=localhost user=postgres password=gpid");
-
-	if (PQstatus(connection) == CONNECTION_BAD) {
-		std::cerr << "database connection failed, start the fkn postgres you fuck" << std::endl;
-		exit(0);
-	}
 }
 
 db::~db() {
-	PQfinish(connection);
 }
 
 bool db::save_device(const std::string &ip_address, const std::string &sys_description) {
+	auto connection = PQconnectdb("dbname=postgres host=localhost user=postgres password=gpid");
+
 	const char* insert_query = "INSERT INTO device (deviceip, sys_descr) VALUES ($1, $2)";
 	PGresult* prepared_query = PQprepare(connection, "", insert_query, 2, NULL);
 
 	if (PQresultStatus(prepared_query) != PGRES_COMMAND_OK) {
 		std::cerr << "Failed to prepare device INSERT statement: " << PQerrorMessage(connection) << std::endl;
+		PQfinish(connection);
 		return false;
 	}
 
@@ -38,11 +34,13 @@ bool db::save_device(const std::string &ip_address, const std::string &sys_descr
 		std::cerr << "Failed to execute device INSERT statement: " << PQerrorMessage(connection) << std::endl;
 		PQclear(prepared_query);
 		PQclear(result);
+		PQfinish(connection);
 		return false;
 	}
 
 	PQclear(prepared_query);
 	PQclear(result);
+	PQfinish(connection);
 
 	std::cout << "created data entry: (" << ip_address << " : " << sys_description << ")" << std::endl; 
 
@@ -50,6 +48,9 @@ bool db::save_device(const std::string &ip_address, const std::string &sys_descr
 }
 
 std::vector<device> db::devices() {
+
+	auto connection = PQconnectdb("dbname=postgres host=localhost user=postgres password=gpid");
+	
 	const char* select_query = "SELECT * FROM device";
 	PGresult* result = PQexecParams(connection, select_query, 0, NULL, NULL, NULL, NULL, 0);
 	std::vector<device> devices;
@@ -57,6 +58,7 @@ std::vector<device> db::devices() {
 	if (PQresultStatus(result) != PGRES_TUPLES_OK) {
 		std::cerr << "Failed to execute SELECT statement: " << PQerrorMessage(connection) << std::endl;
 		PQclear(result);
+		PQfinish(connection);
 		return devices;
 	}
 
@@ -68,11 +70,15 @@ std::vector<device> db::devices() {
 	}
 
 	PQclear(result);
+	PQfinish(connection);
 
 	return devices;
 }
 
 bool db::save_entry(const std::string &ip_address, int timestamp, float consumption) {
+
+	auto connection = PQconnectdb("dbname=postgres host=localhost user=postgres password=gpid");
+
 	const char* select_query = "SELECT id FROM device WHERE deviceip = $1";
 	const char* param_values[1];
 	param_values[0] = ip_address.c_str();
@@ -82,6 +88,7 @@ bool db::save_entry(const std::string &ip_address, int timestamp, float consumpt
 	if (PQresultStatus(select_result) != PGRES_TUPLES_OK) {
 		std::cerr << "Failed to execute SELECT statement: " << PQerrorMessage(connection) << std::endl;
 		PQclear(select_result);
+		PQfinish(connection);
 		return false;
 	}
 
@@ -90,6 +97,7 @@ bool db::save_entry(const std::string &ip_address, int timestamp, float consumpt
 	if (num_rows == 0) {
 		std::cerr << "Device ID not found for IP address: " << ip_address << std::endl;
 		PQclear(select_result);
+		PQfinish(connection);
 		return false;
 	}
 
@@ -103,10 +111,14 @@ bool db::save_entry(const std::string &ip_address, int timestamp, float consumpt
 	if (PQresultStatus(insert_result) != PGRES_COMMAND_OK) {
 		std::cerr << "Failed to execute INSERT statement: " << PQerrorMessage(connection) << std::endl;
 		PQclear(insert_result);
+		PQfinish(connection);
 		return false;
 	}
 
 	std::cout << "created data entry: (" << consumption << ")" << std::endl; 
 
 	PQclear(insert_result);
+	PQfinish(connection);
+
+	return true;
 }
