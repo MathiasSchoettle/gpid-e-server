@@ -115,7 +115,7 @@ bool db::save_entry(const std::string &ip_address, int timestamp, float consumpt
 		return false;
 	}
 
-	std::cout << "created data entry: (" << consumption << ")" << std::endl; 
+	std::cout << "created data entry: (" << consumption << ", " << ip_address << ")" << std::endl; 
 
 	PQclear(insert_result);
 	PQfinish(connection);

@@ -15,3 +15,5 @@ void network_handler();
 bool send_data(int socket, const std::string& data);
 int handle_client_creation(int client_socket, std::string ip_address);
 std::vector<std::string> split(const std::string &s, char seperator);
+
+inline bool fcuk = false;
